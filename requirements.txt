@@ -1,0 +1,12 @@
+# Core runtime is pure standard library - `calyb run` works with zero
+# dependencies using the RuleBasedPlanner.
+
+# Optional: enables LLMPlanner (real OpenAI-backed planning)
+openai>=1.30
+
+# Optional: colorized live trace output in the terminal
+rich>=13.0
+
+# Dev / test
+pytest>=8.0
+pytest-asyncio>=0.23

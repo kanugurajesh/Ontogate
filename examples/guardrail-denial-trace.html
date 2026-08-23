@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Calyb Agent Runtime - Trace run-ad08ca49</title>
+<style>
+  :root {
+    --bg: #0f1117; --panel: #171a23; --border: #2a2e3a; --text: #e6e8ef;
+    --muted: #8b90a0; --ok: #3ecf8e; --fail: #ef5a5a; --skip: #8b90a0; --wave: #232734;
+    --accent: #7c9dfd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, "Segoe UI", Inter, sans-serif;
+    background: var(--bg); color: var(--text);
+  }
+  header { padding: 20px 28px; border-bottom: 1px solid var(--border); }
+  header h1 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
+  header .meta { color: var(--muted); font-size: 13px; }
+  header .meta code { color: var(--text); }
+  .status { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .status.SUCCEEDED { background: rgba(62,207,142,.15); color: var(--ok); }
+  .status.FAILED { background: rgba(239,90,90,.15); color: var(--fail); }
+  main { display: grid; grid-template-columns: 1.4fr 1fr; height: calc(100vh - 78px); }
+  .waves { overflow: auto; padding: 24px 28px; }
+  .wave { margin-bottom: 22px; }
+  .wave .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .steps { display: flex; gap: 10px; flex-wrap: wrap; }
+  .step {
+    border: 1px solid var(--border); background: var(--panel); border-radius: 10px;
+    padding: 10px 14px; min-width: 180px; cursor: pointer; transition: border-color .15s;
+  }
+  .step:hover { border-color: var(--accent); }
+  .step .name { font-weight: 600; font-size: 13px; }
+  .step .tool { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .step .dur { color: var(--muted); font-size: 11px; margin-top: 6px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .dot.SUCCEEDED { background: var(--ok); }
+  .dot.FAILED { background: var(--fail); }
+  .dot.SKIPPED { background: var(--skip); }
+  .step.SUCCEEDED { border-left: 3px solid var(--ok); }
+  .step.FAILED { border-left: 3px solid var(--fail); }
+  .step.SKIPPED { border-left: 3px solid var(--skip); opacity: .6; }
+  aside { border-left: 1px solid var(--border); padding: 24px; overflow: auto; background: #12141c; }
+  aside h2 { font-size: 14px; margin: 18px 0 6px; }
+  aside h2:first-child { margin-top: 0; }
+  pre { background: var(--wave); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+  .empty { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Calyb Agent Runtime &mdash; <span class="status FAILED">FAILED</span></h1>
+  <div class="meta">run <code>run-ad08ca49</code> &middot; task: &ldquo;Grant Erin access to the VPN&rdquo;</div>
+</header>
+<main>
+  <div class="waves" id="waves"></div>
+  <aside id="detail"><p class="empty">Click a step to see its args/output.</p></aside>
+</main>
+<script>
+const DATA = {"steps": [{"id": "lookup", "tool": "lookup_user", "wave": 0, "status": "SUCCEEDED", "duration_ms": 82.47184753417969, "attempts": 1, "cache": "miss", "args": {"user_id": "user:erin"}, "output": {"id": "user:erin", "name": "Erin Walsh", "roles": [], "teams": [], "system_access": []}, "error": null}, {"id": "policy", "tool": "check_policy", "wave": 0, "status": "SUCCEEDED", "duration_ms": 89.04385566711426, "attempts": 1, "cache": "miss", "args": {"system_id": "system:vpn"}, "output": {"system": "system:vpn", "policies": [{"policy": "policy:eng_policy", "requires_any_role": ["role:engineer", "role:admin"]}]}, "error": null}, {"id": "grant", "tool": "grant_access", "wave": 1, "status": "FAILED", "duration_ms": 197.86334037780762, "attempts": 2, "cache": "miss", "args": {"user_id": "user:erin", "system_id": "system:vpn"}, "output": null, "error": "access denied by ontology: policy 'policy:eng_policy' governing 'system:vpn' requires one of roles [role:engineer, role:admin], but 'user:erin' has none of them"}, {"id": "notify", "tool": "notify_user", "wave": 2, "status": "SKIPPED", "duration_ms": 0.0, "attempts": null, "cache": null, "args": null, "output": null, "error": null}]};
+const wavesEl = document.getElementById('waves');
+const detailEl = document.getElementById('detail');
+
+const byWave = {};
+for (const s of DATA.steps) {
+  (byWave[s.wave] = byWave[s.wave] || []).push(s);
+}
+
+Object.keys(byWave).sort((a, b) => a - b).forEach(w => {
+  const waveDiv = document.createElement('div');
+  waveDiv.className = 'wave';
+  waveDiv.innerHTML = '<div class="label">wave ' + w + '</div>';
+  const stepsDiv = document.createElement('div');
+  stepsDiv.className = 'steps';
+  for (const s of byWave[w]) {
+    const el = document.createElement('div');
+    el.className = 'step ' + s.status;
+    el.innerHTML =
+      '<div class="name"><span class="dot ' + s.status + '"></span>' + s.id + '</div>' +
+      '<div class="tool">' + s.tool + '</div>' +
+      '<div class="dur">' + (s.duration_ms != null ? Math.round(s.duration_ms) + 'ms' : s.status.toLowerCase()) + '</div>';
+    el.onclick = () => showDetail(s);
+    stepsDiv.appendChild(el);
+  }
+  waveDiv.appendChild(stepsDiv);
+  wavesEl.appendChild(waveDiv);
+});
+
+function showDetail(s) {
+  const bits = ['tool: ' + s.tool, 'status: ' + s.status];
+  if (s.duration_ms != null) bits.push(Math.round(s.duration_ms) + 'ms');
+  if (s.attempts) bits.push('attempts: ' + s.attempts);
+  if (s.cache) bits.push('cache: ' + s.cache);
+  detailEl.innerHTML =
+    '<h2>' + s.id + '</h2>' +
+    '<p class="empty">' + bits.join(' &middot; ') + '</p>' +
+    '<h2>args</h2><pre>' + JSON.stringify(s.args, null, 2) + '</pre>' +
+    '<h2>' + (s.status === 'FAILED' ? 'error' : 'output') + '</h2>' +
+    '<pre>' + JSON.stringify(s.status === 'FAILED' ? s.error : s.output, null, 2) + '</pre>';
+}
+
+if (DATA.steps.length) {
+  showDetail(DATA.steps[0]);
+}
+</script>
+</body>
+</html>
