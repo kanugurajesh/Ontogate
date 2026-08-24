@@ -1,11 +1,11 @@
-from calyb.ontology.schema import RelationType
-from calyb.ontology.seed_data import build_graph
-from calyb.runtime.cache import Cache
-from calyb.runtime.dag import Plan, Step
-from calyb.runtime.orchestrator import Orchestrator
-from calyb.runtime.planner import RuleBasedPlanner
-from calyb.runtime.state import StateStore
-from calyb.runtime.tools import PermanentToolError, ToolError, ToolRegistry, build_tool_registry
+from ontogate.ontology.schema import RelationType
+from ontogate.ontology.seed_data import build_graph
+from ontogate.runtime.cache import Cache
+from ontogate.runtime.dag import Plan, Step
+from ontogate.runtime.orchestrator import Orchestrator
+from ontogate.runtime.planner import RuleBasedPlanner
+from ontogate.runtime.state import StateStore
+from ontogate.runtime.tools import PermanentToolError, ToolError, ToolRegistry, build_tool_registry
 
 
 def make_orchestrator(tools, **kwargs):

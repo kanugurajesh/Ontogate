@@ -156,6 +156,14 @@ class Orchestrator:
                     last_exc = exc
                     if attempt <= self.max_retries:
                         await asyncio.sleep(self.backoff_base * (2 ** (attempt - 1)))
+                except Exception as exc:
+                    # Not a ToolError - e.g. a TypeError from a planner passing
+                    # args that don't match the tool's signature. Retrying
+                    # would just fail identically every time, so treat it as
+                    # permanent and fail this step without crashing the run.
+                    breaker.on_failure()
+                    last_exc = exc
+                    break
 
             span.attributes["attempts"] = attempt
             span.status = "FAILED"

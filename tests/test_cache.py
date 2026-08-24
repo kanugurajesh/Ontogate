@@ -1,6 +1,6 @@
 import time
 
-from calyb.runtime.cache import CACHE_MISS, Cache
+from ontogate.runtime.cache import CACHE_MISS, Cache
 
 
 def test_miss_then_hit():

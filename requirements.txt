@@ -1,4 +1,4 @@
-# Core runtime is pure standard library - `calyb run` works with zero
+# Core runtime is pure standard library - `ontogate run` works with zero
 # dependencies using the RuleBasedPlanner.
 
 # Optional: enables LLMPlanner (real OpenAI-backed planning)

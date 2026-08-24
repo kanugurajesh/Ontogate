@@ -2,7 +2,7 @@ import time
 
 import pytest
 
-from calyb.runtime.circuit_breaker import CircuitBreaker, CircuitOpenError, CircuitState
+from ontogate.runtime.circuit_breaker import CircuitBreaker, CircuitOpenError, CircuitState
 
 
 def test_opens_after_threshold_failures():

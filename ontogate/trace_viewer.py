@@ -16,7 +16,7 @@ _TEMPLATE = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Calyb Agent Runtime - Trace %%RUN_ID%%</title>
+<title>Ontogate Agent Runtime - Trace %%RUN_ID%%</title>
 <style>
   :root {
     --bg: #0f1117; --panel: #171a23; --border: #2a2e3a; --text: #e6e8ef;
@@ -64,7 +64,7 @@ _TEMPLATE = """<!doctype html>
 </head>
 <body>
 <header>
-  <h1>Calyb Agent Runtime &mdash; <span class="status %%STATUS%%">%%STATUS%%</span></h1>
+  <h1>Ontogate Agent Runtime &mdash; <span class="status %%STATUS%%">%%STATUS%%</span></h1>
   <div class="meta">run <code>%%RUN_ID%%</code> &middot; task: &ldquo;%%TASK%%&rdquo;</div>
 </header>
 <main>

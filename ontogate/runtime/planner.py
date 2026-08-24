@@ -46,7 +46,7 @@ class RuleBasedPlanner:
     a handful of canned enterprise-workflow phrasings ("onboard...",
     "investigate access...", "grant access...") into a validated DAG
     grounded in real ontology entities. No network access and no API key,
-    which is what keeps the test suite and `calyb demo` fully
+    which is what keeps the test suite and `ontogate demo` fully
     reproducible."""
 
     def __init__(self, graph: KnowledgeGraph, tools: ToolRegistry, memory: Memory | None = None) -> None:

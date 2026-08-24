@@ -1,9 +1,9 @@
 import pytest
 
-from calyb.ontology.graph import KnowledgeGraph
-from calyb.ontology.rules import default_rules, rule_no_membership_cycles
-from calyb.ontology.schema import Entity, EntityType, OntologyViolation, Relation, RelationType
-from calyb.ontology.seed_data import build_graph
+from ontogate.ontology.graph import KnowledgeGraph
+from ontogate.ontology.rules import default_rules, rule_no_membership_cycles
+from ontogate.ontology.schema import Entity, EntityType, OntologyViolation, Relation, RelationType
+from ontogate.ontology.seed_data import build_graph
 
 
 def make_graph() -> KnowledgeGraph:

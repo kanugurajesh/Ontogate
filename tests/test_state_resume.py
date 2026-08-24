@@ -1,10 +1,10 @@
 import pytest
 
-from calyb.runtime.cache import Cache
-from calyb.runtime.dag import Plan, Step
-from calyb.runtime.orchestrator import Orchestrator
-from calyb.runtime.state import StateStore
-from calyb.runtime.tools import ToolRegistry
+from ontogate.runtime.cache import Cache
+from ontogate.runtime.dag import Plan, Step
+from ontogate.runtime.orchestrator import Orchestrator
+from ontogate.runtime.state import StateStore
+from ontogate.runtime.tools import ToolRegistry
 
 
 def build_tools(call_counts, crash_flag):

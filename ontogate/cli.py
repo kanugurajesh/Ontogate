@@ -65,7 +65,7 @@ def _run_task(task: str, planner_name: str, failure_rate: float, run_id: str | N
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="calyb", description="An enterprise workflow agent runtime.")
+    parser = argparse.ArgumentParser(prog="ontogate", description="An enterprise workflow agent runtime.")
     sub = parser.add_subparsers(dest="command", required=True)
 
     run_p = sub.add_parser("run", help="Run a single task through the agent runtime.")

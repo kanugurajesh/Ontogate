@@ -1,11 +1,11 @@
-# Calyb Agent Runtime
+# Ontogate Agent Runtime
 
 A from-scratch **enterprise agent runtime**: an ontology-grounded planner that
 decomposes a natural-language task into a DAG, an async orchestrator that
 executes it with retries, a circuit breaker, checkpointed fault tolerance,
 content-addressed caching, keyword-retrieval memory, and structured tracing.
 
-I built this after reading Calyb's internship posting. Calyb's own framing —
+I built this after reading Ontogate's internship posting. Ontogate's own framing —
 "capturing the knowledge that runs a business and making it machine
 executable so AI workers can assist or automate any workflow" — is exactly
 what this project tries to demonstrate in miniature: an **ontology engine**
@@ -24,7 +24,7 @@ decisions are all mine to explain.
 python -m venv .venv && source .venv/bin/activate   # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt   # optional: only needed for --planner llm or colored output
 
-python -m calyb.cli demo
+python -m ontogate.cli demo
 ```
 
 This runs three scenarios end-to-end and writes a trace + a self-contained
@@ -35,10 +35,10 @@ browser, no server needed. A pre-generated example is in
 Run a single task:
 
 ```bash
-python -m calyb.cli run "Onboard Erin as a data analyst on the data team"
-python -m calyb.cli run "Grant Erin access to the VPN"          # denied by the ontology
-python -m calyb.cli run "..." --planner llm                     # needs OPENAI_API_KEY
-python -m calyb.cli run "..." --run-id demo-1 --resume          # resume a crashed/interrupted run
+python -m ontogate.cli run "Onboard Erin as a data analyst on the data team"
+python -m ontogate.cli run "Grant Erin access to the VPN"          # denied by the ontology
+python -m ontogate.cli run "..." --planner llm                     # needs OPENAI_API_KEY
+python -m ontogate.cli run "..." --run-id demo-1 --resume          # resume a crashed/interrupted run
 ```
 
 Run the tests:
@@ -76,19 +76,19 @@ pytest
 
 | JD term | Where it lives |
 |---|---|
-| Ontology engine | `calyb/ontology/` — typed entities/relations, pluggable validation rules, policy-based access guardrails |
-| Planning | `calyb/runtime/planner.py` — `RuleBasedPlanner` (deterministic fallback) and `LLMPlanner` (OpenAI, JSON-schema constrained, self-correcting) |
-| Orchestration | `calyb/runtime/orchestrator.py` — dependency-wave scheduling, concurrent execution within a wave |
-| Execution algorithms | `calyb/runtime/dag.py` — topological wave computation, cycle detection, placeholder resolution between steps |
-| Memory | `calyb/runtime/memory.py` — per-run scratchpad + durable episodic recall |
-| State management | `calyb/runtime/state.py` — per-step status persisted to SQLite, drives resume |
-| Caching | `calyb/runtime/cache.py` — content-addressed, TTL-aware, memoizes idempotent tool calls |
-| Observability | `calyb/runtime/tracing.py` + `calyb/trace_viewer.py` — spans, live console output, static HTML trace/DAG viewer |
-| Fault tolerance | `calyb/runtime/circuit_breaker.py` + retry/backoff in the orchestrator + checkpointed resume |
+| Ontology engine | `ontogate/ontology/` — typed entities/relations, pluggable validation rules, policy-based access guardrails |
+| Planning | `ontogate/runtime/planner.py` — `RuleBasedPlanner` (deterministic fallback) and `LLMPlanner` (OpenAI, JSON-schema constrained, self-correcting) |
+| Orchestration | `ontogate/runtime/orchestrator.py` — dependency-wave scheduling, concurrent execution within a wave |
+| Execution algorithms | `ontogate/runtime/dag.py` — topological wave computation, cycle detection, placeholder resolution between steps |
+| Memory | `ontogate/runtime/memory.py` — per-run scratchpad + durable episodic recall |
+| State management | `ontogate/runtime/state.py` — per-step status persisted to SQLite, drives resume |
+| Caching | `ontogate/runtime/cache.py` — content-addressed, TTL-aware, memoizes idempotent tool calls |
+| Observability | `ontogate/runtime/tracing.py` + `ontogate/trace_viewer.py` — spans, live console output, static HTML trace/DAG viewer |
+| Fault tolerance | `ontogate/runtime/circuit_breaker.py` + retry/backoff in the orchestrator + checkpointed resume |
 
 ## The ontology as a guardrail, not documentation
 
-The interesting design decision is in `calyb/ontology/rules.py`. Most
+The interesting design decision is in `ontogate/ontology/rules.py`. Most
 "ontology" demos are just a schema — a description of the world an LLM can
 still ignore. Here, `rule_access_requires_policy_role` runs on every write to
 the graph: granting a user access to a system checks every `POLICY` that
@@ -97,7 +97,7 @@ roles that policy `REQUIRES_ROLE`. The agent runtime doesn't check this in
 the planner or in a prompt — the graph itself refuses the write:
 
 ```
-$ python -m calyb.cli run "Grant Erin access to the VPN"
+$ python -m ontogate.cli run "Grant Erin access to the VPN"
 ...
 [FAIL] grant: access denied by ontology: policy 'policy:eng_policy' governing
        'system:vpn' requires one of roles [role:engineer, role:admin], but
@@ -108,7 +108,7 @@ The orchestrator also knows this specific failure is never worth retrying
 (`PermanentToolError`, vs. the retryable `ToolError` used for simulated
 transient upstream failures) and correctly cascades a `SKIPPED` status to
 the dependent `notify` step instead of quietly running it. Compare that to
-`python -m calyb.cli run "Onboard Erin as a data analyst on the data team"`,
+`python -m ontogate.cli run "Onboard Erin as a data analyst on the data team"`,
 where the same `grant_access` tool call succeeds because onboarding assigns
 the role *first* (a DAG dependency), which the policy then accepts.
 
@@ -147,11 +147,11 @@ That's the actual mechanism, not a mock of it.
 ## Project layout
 
 ```
-calyb/
+ontogate/
   ontology/       entities, relations, validation rules, seed enterprise graph
   runtime/        dag, planner, orchestrator, cache, state, memory, tracing, circuit breaker, tools
   trace_viewer.py static HTML DAG/timeline renderer
-  cli.py          `calyb run` / `calyb demo`
+  cli.py          `ontogate run` / `ontogate demo`
 tests/            29 tests covering ontology rules, DAG validation, cache,
                   circuit breaker, checkpoint/resume, and end-to-end runs
 examples/         a pre-generated trace, in case you don't want to run it

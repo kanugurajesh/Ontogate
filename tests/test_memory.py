@@ -1,4 +1,4 @@
-from calyb.runtime.memory import Memory
+from ontogate.runtime.memory import Memory
 
 
 def test_recall_similar_ranks_by_token_overlap():

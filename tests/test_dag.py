@@ -1,6 +1,6 @@
 import pytest
 
-from calyb.runtime.dag import DAGValidationError, Plan, Step
+from ontogate.runtime.dag import DAGValidationError, Plan, Step
 
 
 def test_waves_respect_dependencies_and_parallelize_independent_steps():
